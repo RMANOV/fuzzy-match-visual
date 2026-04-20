@@ -1,5 +1,10 @@
 # Fuzzy Match Visual Explorer
 
+## Technical deep-dives
+
+- **Medium:** [The Two Algorithms Every Developer Uses Wrong: A Visual Guide to Fuzzy String Matching](https://medium.com/@r.manov/the-two-algorithms-every-developer-uses-wrong-a-visual-guide-to-fuzzy-string-matching-5d97961bb465)
+- **Dev.to:** [You're probably using the wrong fuzzy matching algorithm (and here's how to see why)](https://dev.to/ruslan_manov/youre-probably-using-the-wrong-fuzzy-matching-algorithm-and-heres-how-to-see-why-4efc)
+
 **Interactive terminal demo comparing Levenshtein Distance and Python's `difflib.SequenceMatcher` — with animated DP matrices, block discovery visualizations, and real-world application examples.**
 
 ```
