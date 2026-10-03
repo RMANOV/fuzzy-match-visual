@@ -286,11 +286,11 @@ A: "Acme Corp."
 B: "ACME Corporation"
 ```
 
-**Levenshtein:** Distance = 9 (case changes, "orp." vs "orporation")
-- Ratio = 1 − 9/16 = **43.8%**
+**Levenshtein:** Distance = 10 (case changes, "orp." vs "orporation")
+- Ratio = 1 − 10/16 = **37.5%**
 
 **SequenceMatcher:** Finds blocks like "me Corp", "or"
-- Ratio ≈ **61.5%**
+- Ratio ≈ **46.2%**
 
 The difference is dramatic. SequenceMatcher correctly identifies these as likely the same company. Levenshtein is harsh because case changes and abbreviations each cost an edit.
 
@@ -331,7 +331,7 @@ Actually, distance is calculated as follows:
 
 **SequenceMatcher:** Finds individual character matches
 - Finds "c" or "d" as longest block (size 1), then other single chars
-- Ratio ≈ **33.3%**
+- Ratio ≈ **16.7%**
 
 **Why they disagree:** Levenshtein sees *every position is wrong*. SequenceMatcher sees *some characters are shared*. For reversed strings, SequenceMatcher is arguably more useful — these strings share 100% of their character inventory, just reordered.
 
@@ -344,11 +344,11 @@ B: "Sunday"
 - S stays, a→u, t→n, u→d, delete "r", day stays... actually:
 - S=S, delete "at", u=u, r→n, d=d, a=a, y=y → distance 3
 
-**SequenceMatcher:** Ratio = **57.1%**
+**SequenceMatcher:** Ratio = **71.4%**
 - Blocks: "S" (1), "u" (1), "day" (3) → M = 5
-- 2·5/14 = 71.4%... let me recalculate
+- 2·5/14 = 71.4%
 
-This is a case where **Levenshtein scores higher** — it efficiently finds that only 3 edits are needed, while SequenceMatcher gets distracted by the non-contiguous matches.
+This is a case where **SequenceMatcher scores higher**: its 71.4% ratio exceeds Levenshtein's 62.5%, although Levenshtein finds that only 3 edits are needed.
 
 ---
 
@@ -486,7 +486,7 @@ def hybrid_vlookup(query, catalog, w=0.4, threshold=0.45):
         if score > best_score:
             best_score = score
             best_match = item
-    return best_match, best_score if best_score >= threshold else (None, 0)
+    return (best_match, best_score) if best_score >= threshold else (None, 0)
 ```
 
 ### DNA Sequence Alignment
@@ -560,17 +560,17 @@ Hybrid(a, b, w) = w · LevenshteinRatio(a, b) + (1 - w) · SequenceMatcherRatio(
 **Weight sweep example** for "Acme Corp." vs "ACME Corporation":
 
 ```
-w=0.0  →  61.5%  (pure SM)
-w=0.1  →  59.8%
-w=0.2  →  58.0%
-w=0.3  →  56.2%  ← accounting sweet spot
-w=0.4  →  54.4%
-w=0.5  →  52.7%  ← balanced
-w=0.6  →  50.9%
-w=0.7  →  49.1%
-w=0.8  →  47.3%
-w=0.9  →  45.6%
-w=1.0  →  43.8%  (pure Lev)
+w=0.0  →  46.2%  (pure SM)
+w=0.1  →  45.3%
+w=0.2  →  44.4%
+w=0.3  →  43.6%  ← accounting sweet spot
+w=0.4  →  42.7%
+w=0.5  →  41.8%  ← balanced
+w=0.6  →  41.0%
+w=0.7  →  40.1%
+w=0.8  →  39.2%
+w=0.9  →  38.4%
+w=1.0  →  37.5%  (pure Lev)
 ```
 
 **Recommendation for accounting/ERP:** `w = 0.3–0.5`. Invoice descriptions have enough structure that Levenshtein adds value for character-level typo detection, but SequenceMatcher's block matching handles the varying formats better.
