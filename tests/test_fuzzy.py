@@ -77,6 +77,27 @@ class Algorithms(unittest.TestCase):
                 with self.subTest(ref=ref, weight=weight):
                     self.assertAlmostEqual(ns['hybrid']('kitten', 'sitting', weight), weight * (4 / 7) + (1 - weight) * (8 / 13))
 
+    def test_worked_pairs_blocks_distances_ratios_and_company_weight_sweep(self):
+        ns = self.versions[0][1]
+        cases = [
+            ('Acme Corp.', 'ACME Corporation', 10, 6 / 13,
+             [(0, 0, 1), (4, 4, 5), (10, 16, 0)]),
+            ('abcdef', 'fedcba', 6, 1 / 6, [(0, 5, 1), (6, 6, 0)]),
+            ('Saturday', 'Sunday', 3, 5 / 7,
+             [(0, 0, 1), (3, 1, 1), (5, 3, 3), (8, 6, 0)]),
+        ]
+        for a, b, distance, ratio, blocks in cases:
+            with self.subTest(a=a, b=b):
+                result = ns['sm_full'](a, b)
+                self.assertEqual(ns['lev_dist'](a, b), distance)
+                self.assertAlmostEqual(result['ratio'], ratio)
+                self.assertEqual(result['blocks'], [difflib.Match(*block) for block in blocks])
+        self.assertEqual(
+            [round(100 * ns['hybrid']('Acme Corp.', 'ACME Corporation', n / 10), 1)
+             for n in range(11)],
+            [46.2, 45.3, 44.4, 43.6, 42.7, 41.8, 41.0, 40.1, 39.2, 38.4, 37.5],
+        )
+
     def test_exhaustive_small_inputs_distance_contract(self):
         words = [''] + [''.join(p) for n in range(1, 4) for p in itertools.product('ab', repeat=n)]
         ns = self.versions[0][1]

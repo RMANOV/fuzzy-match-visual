@@ -289,7 +289,7 @@ B: "ACME Corporation"
 **Levenshtein:** Distance = 10 (case changes, "orp." vs "orporation")
 - Ratio = 1 − 10/16 = **37.5%**
 
-**SequenceMatcher:** Finds blocks like "me Corp", "or"
+**SequenceMatcher:** Finds "A" (1 character) and " Corp" (5 characters), for 6 matching characters in total.
 - Ratio ≈ **46.2%**
 
 The difference is dramatic. SequenceMatcher correctly identifies these as likely the same company. Levenshtein is harsh because case changes and abbreviations each cost an edit.
@@ -330,7 +330,7 @@ Actually, distance is calculated as follows:
 - Ratio = 0%
 
 **SequenceMatcher:** Finds individual character matches
-- Finds "c" or "d" as longest block (size 1), then other single chars
+- Finds only "a" (size 1), at A[0] and B[5]
 - Ratio ≈ **16.7%**
 
 **Why they disagree:** Levenshtein sees *every position is wrong*. SequenceMatcher sees *some characters are shared*. For reversed strings, SequenceMatcher is arguably more useful — these strings share 100% of their character inventory, just reordered.
