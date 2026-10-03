@@ -7,7 +7,7 @@
 ╚═══════════════════════════════════════════════════════════════╝
 """
 
-import sys, os, time, math, colorsys, unicodedata, signal, termios, tty, difflib
+import sys, os, time, colorsys, unicodedata, signal, termios, tty, difflib
 
 # ════════════════════════════════════════════════════════════════════════════════
 # §1  TERMINAL ENGINE
@@ -482,7 +482,7 @@ def demo_5():
         scored.sort(key=lambda x: -x[2])
         W(f"{at(r, 3)}{BLD}\"{typo}\"{RST} → top matches:")
         r += 1
-        for w, lr, sr in scored[:3]:
+        for w, _lr, sr in scored[:3]:
             marker = f" {CM}✓{RST}" if w == expected else ""
             W(f"{at(r, 5)}{w:>15s} {hbar(bw, sr, CSm)} {sr*100:4.1f}%{marker}")
             r += 1
@@ -573,9 +573,6 @@ def demo_6():
     for wi, (wv, hv) in enumerate(sweep):
         lbl = f"w={wv:.1f}"
         # Color gradient from CSm (w=0) to CLev (w=1)
-        cr = int(80 + wv * (80 - 80))
-        cg = int(150 + wv * (200 - 150))
-        cb = int(255 + wv * (255 - 255))
         clr = fg(int(80 + wv * 0), int(150 + wv * 50), int(255 - wv * 95))
         W(f"{at(r + wi, 3)}{lbl:>8s} {hbar(bw, hv, clr)} {hv*100:5.1f}%")
         sl(0.06)
